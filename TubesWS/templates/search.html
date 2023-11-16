@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
+  </head>
+  <body>
+    <nav class="navbar bg-light p-3 shadow-sm fixed-top">
+      <div class="container-fluid d-flex justify-content-start">
+        <a class="navbar-brand">Navbar</a>
+        <form class="d-flex w-50" role="search" method="get" action="/search">
+          <input
+            class="search form-control me-2 shadow-sm"
+            type="search"
+            name="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <input type="submit" hidden>
+        </form>
+      </div>
+    </nav>
+    <div class="container py-5" style="margin-top: 80px;">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col items-center">
+            <div class="mb-4">
+            {% if result %}
+              <h1 class="fs-4">
+                Result : {{count}}
+              </h1>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          {% if result and result%}
+            {% for data in result %}
+              <div class="col-6 mb-3" onclick="location.href='/detail/{{data.nama.value}}'">
+                <div class="card mb-3 result" style="max-width: 580px">
+                  <div class="row g-0">
+                    <div class="col-md-4">
+                      <img
+                        src="{{data['image_url']['value']}}"
+                        class="img-top img-fluid rounded-start"
+                        style="object-fit: cover; width: 100%; height: 100%"
+                        alt="..."
+                      />
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                         {% if "nama" in data %}
+                        <h5 class="card-title">{{data["nama"]["value"]}}</h5>
+                        {% endif %}
+                         {% if "alamat" in data %}
+                        <p class="card-text">
+                          {{data["alamat"]["value"]}}
+                        </p>
+                        {% endif %}
+                        <p class="card-text">
+                          <small class="text-muted">No. Telpon: 
+                            {% if "telepon" in data and data["telepon"]["value"] %}
+                              {{data["telepon"]["value"]}}
+                            {% else %}
+                              -
+                            {% endif %}
+                          </small>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <h3 class="mt-5 text-center">Tidak ada data yang tersedia tentang "{{search_query}}"</h3>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

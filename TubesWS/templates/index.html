@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,800" rel="stylesheet" />
+    <link href="{{ url_for('static', filename= 'css/main.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+  </head>
+  <body>
+    <div class="s004">
+      <form method="get" action="/search">
+        <fieldset>
+          <legend class="legend">SUMUT HOSPITAL</legend>
+            <input class="search form-control me-2 p-3 shadow-sm" type="search" placeholder="Masukkan Nama Rumah Sakit / Alamat" aria-label="Search" name="search">
+            <input type="submit" hidden />
+        </fieldset>
+      </form>
+    </div>
+    <script src="{{ url_for('static', filename= 'js/extention/choices.js') }}"></script>
+    <script>
+      var textPresetVal = new Choices('#choices-text-preset-values',
+      {
+        removeItemButton: true,
+      });
+
+    </script>
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

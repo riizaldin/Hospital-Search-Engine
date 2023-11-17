@@ -6,18 +6,21 @@
     <title>Detail</title>
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
+    <link rel="icon" href="../static/images/thumbnailsumutsehat.png" type="image/png" />
   </head>
   <body>
     <nav class="navbar bg-light p-3 shadow-sm fixed-top">
-      <div class="container-fluid d-flex justify-content-start">
-        <a class="navbar-brand">Navbar</a>
-        <form class="d-flex w-50" role="search">
+      <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand"><img src="images/logo.png" alt="logo" width="120px"></a>
+        <form class="d-flex w-50" role="search" method="get" action="/search">
           <input
             class="search form-control me-2 shadow-sm"
             type="search"
+            name="search"
             placeholder="Search"
             aria-label="Search"
           />
+          <input type="submit" hidden>
         </form>
       </div>
     </nav>

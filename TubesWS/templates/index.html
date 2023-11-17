@@ -7,18 +7,20 @@
     <link href="{{ url_for('static', filename= 'css/main.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <link rel="icon" href="../static/images/thumbnailsumutsehat.png" type="image/png" />
   </head>
   <body>
     <div class="s004">
-      <form method="get" action="/search">
+      <form>
         <fieldset>
-          <legend class="legend">SUMUT HOSPITAL</legend>
-            <input class="search form-control me-2 p-3 shadow-sm" type="search" placeholder="Masukkan Nama Rumah Sakit / Alamat" aria-label="Search" name="search">
-            <input type="submit" hidden />
+          <legend class="legend"><img src="images/logo.png" alt="logo" width="350px"></legend>
+          <form class="d-flex w-50" role="search">
+            <input class="search form-control me-2 p-3 shadow-sm" type="search" placeholder="Search" aria-label="Search">
+        </form>
         </fieldset>
       </form>
     </div>
-    <script src="{{ url_for('static', filename= 'js/extention/choices.js') }}"></script>
+    <script src="js/extention/choices.js"></script>
     <script>
       var textPresetVal = new Choices('#choices-text-preset-values',
       {

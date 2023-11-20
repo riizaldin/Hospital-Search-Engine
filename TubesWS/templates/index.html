@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Sumut Sehat</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,20 +8,24 @@
     <link href="{{ url_for('static', filename= 'css/main.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-    <link rel="icon" href="../static/images/thumbnailsumutsehat.png" type="image/png" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'leaflet/leaflet.css') }}" />
+    <script src="{{ url_for('static', filename= 'leaflet/leaflet.js') }}"></script>
+    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+
   </head>
   <body>
     <div class="s004">
-      <form>
-        <fieldset>
-          <legend class="legend"><img src="images/logo.png" alt="logo" width="350px"></legend>
+        <form method="get" action="/search">
+          <fieldset>
+          <legend class="legend"><img src="{{ url_for('static', filename= 'images/logo.png ') }}" alt="logo" width="350px"></legend>
           <form class="d-flex w-50" role="search">
-            <input class="search form-control me-2 p-3 shadow-sm" type="search" placeholder="Search" aria-label="Search">
+            <input class="search form-control me-2 p-3 shadow-sm" name="search" type="search" placeholder="Search" aria-label="Search">
+            <input type="submit" hidden />
         </form>
         </fieldset>
       </form>
     </div>
-    <script src="js/extention/choices.js"></script>
+    <script src="{{ url_for('static', filename= 'js/extention/choices.js') }}"></script>
     <script>
       var textPresetVal = new Choices('#choices-text-preset-values',
       {
@@ -28,5 +33,5 @@
       });
 
     </script>
-  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+  </body>
 </html>

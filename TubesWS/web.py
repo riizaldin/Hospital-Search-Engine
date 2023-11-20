@@ -1,8 +1,9 @@
 from flask import Flask, render_template, redirect, request
 from SPARQLWrapper import SPARQLWrapper, JSON
-import json
+import requests
+
 sparql = SPARQLWrapper(
-    "http://localhost:3030/sumuthospital/query"
+    "http://localhost:3030/sumutsehat/query"
 )
 
 app = Flask(__name__)
@@ -72,7 +73,7 @@ def detail(hospital):
 
     randomQuery = f"""
         PREFIX schema: <http://websemantikkelompok6.org/>
-        SELECT ?subject ?nama ?alamat ?kelas ?luas_bangunan ?luas_tanah ?blu ?jenis ?telepon ?image_url
+        SELECT DISTINCT ?subject ?nama ?alamat ?kelas ?luas_bangunan ?luas_tanah ?blu ?jenis ?telepon ?image_url
         WHERE {{
             ?subject schema:name ?nama .
             OPTIONAL {{ ?subject schema:alamat ?alamat . }}
@@ -92,13 +93,38 @@ def detail(hospital):
     sparql.setReturnFormat(JSON)
     rand = sparql.queryAndConvert()
     random = rand["results"]["bindings"]
+
+    wikidataQuery = f"""
+    PREFIX wd: <http://www.wikidata.org/entity/>
+    PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+    PREFIX wikibase: <http://wikiba.se/ontology#>
+    PREFIX p: <http://www.wikidata.org/prop/>
+    PREFIX ps: <http://www.wikidata.org/prop/statement/>
+    PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX bd: <http://www.bigdata.com/rdf#>
+
+    SELECT ?hospitals ?label ?coordinates WHERE{{
+        ?hospitals wdt:P31 wd:Q16917 .
+        ?hospitals wdt:P131 wd:Q5972 .
+        ?hospitals  rdfs:label ?label .
+        OPTIONAL {{?hospitals wdt:P625 ?coordinates .}} 
+        FILTER (langMatches( lang(?label), "id" ) ) . 
+    }}
+    """
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+    
+    # response = requests.post("https://query.wikidata.org/sparql", {"query":wikidataQuery}, headers=headers)
+    # response_json = response.json()
+    # wikiResult =  response_json["results"]["bindings"]
+
+    # 9f26ee5b5fda4b5ba51ca2b4afebb031
     return render_template("detail.html", result=result, name=hospital, random=random)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
-
   

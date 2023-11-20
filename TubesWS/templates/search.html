@@ -6,12 +6,13 @@
     <title>Search Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
-    <link rel="icon" href="../static/images/thumbnailsumutsehat.png" type="image/png" />
+    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+
   </head>
   <body>
     <nav class="navbar bg-light p-3 shadow-sm fixed-top">
       <div class="container-fluid d-flex justify-content-between">
-        <a class="navbar-brand"><img src="images/logo.png" alt="logo" width="120px"></a>
+        <a class="navbar-brand"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
         <form class="d-flex w-50" role="search" method="get" action="/search">
           <input
             class="search form-control me-2 shadow-sm"
@@ -24,6 +25,7 @@
         </form>
       </div>
     </nav>
+    
     <div class="container py-5" style="margin-top: 80px;">
       <div class="container-fluid">
         <div class="row justify-content-center">

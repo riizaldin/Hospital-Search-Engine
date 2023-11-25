@@ -180,6 +180,21 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Kota</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['kota'] is defined and result[0]['kota']['value'] %}
+                            <a href="/kota/{{result[0]['kota']['value']}}" class="text-decoration-none">
+                                {{ result[0]['kota']['value'] }}
+                            </a>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
                   </div>
                 </div>
               </div>
@@ -218,40 +233,12 @@
     </div>
   </body>
   <script>
-    var map = L.map('map').setView([51.505, -0.09], 13);
+    let latitude = {{latitude | safe}};
+    let longitude = {{longitude | safe}};
+    var map = L.map('map').setView([latitude, longitude], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
     }).addTo(map);
-    let query = "{{name}}";
-    const url = `https://nominatim.openstreetmap.org/search?addressdetails=1&q=${query}&format=jsonv2&limit=1`;
-    const data = fetch(url).then(data => {
-        return data.json();
-    })
-    console.log(data)
-    
-    // .then(res => {
-    //     console.log(res);
-    //     let lat = res[0].lat;
-    //     let lon = res[0].lon;
-    //     map.setView([lat, lon], 13);
-    //     L.marker([lat, lon]).addTo(map);
-    // })
-    
-    
-    var marker = L.marker([51.5, -0.09]).addTo(map);
-    
-
-    // var map = L.map('map').setView([51.52255, -0.10249], 13);
-    // var options = {
-    //   key: 'YOUR-API-KEY',
-    //   limit: 10,
-    //   proximity: '51.52255, -0.10249' // favour results near here
-    // };
-    // var control = L.Control.openCageGeocoding(options).addTo(map);
-    // L.tileLayer('https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}{r}.png?apikey=YOUR_THUNDERFOREST_API_KEY', {
-    //   attribution: 'Data <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors, Map tiles &copy; <a href="https://www.thunderforest.com/">Thunderforest</a>',
-    //   minZoom: 4,
-    //   maxZoom: 18
-    // }).addTo(map);
+    var marker = L.marker([latitude, longitude]).addTo(map);
   </script>
 </html>

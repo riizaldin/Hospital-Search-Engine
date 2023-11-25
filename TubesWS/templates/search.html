@@ -30,8 +30,31 @@
       <div class="container-fluid">
         <div class="row justify-content-center">
           <div class="col items-center">
-            <div class="mb-4">
-            {% if result %}
+              <div class="mb-4">
+              {% if result %}
+              <div class="d-flex justify-content-end mx-5">
+                <div class="form-check form-check-inline">
+                  <h5 class="mt-1">Pilih Kelas</h5>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <form>
+                    <input type="checkbox" id="checkboxA" value="A" class="btn-check">
+                    <label for="checkboxA" class="btn btn-outline-secondary">A</label>
+                  </form>
+                  <form>
+                    <input type="checkbox" id="checkboxB" value="B" class="btn-check">
+                    <label for="checkboxB" class="btn btn-outline-secondary">B</label>
+                  </form>
+                  <form>
+                    <input type="checkbox" id="checkboxC" value="C" class="btn-check">
+                    <label for="checkboxC" class="btn btn-outline-secondary">C</label>
+                  </form>
+                  <form>
+                    <input type="checkbox" id="checkboxD" value="D" class="btn-check">
+                    <label for="checkboxD" class="btn btn-outline-secondary">D</label>
+                  </form>
+                </div>
+              </div>
               <h1 class="fs-4">
                 Result : {{count}}
               </h1>

@@ -2,6 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta property="og:image" content="{{ url_for('static', filename= 'images/logo.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1708">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Medan">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
@@ -55,17 +59,17 @@
                   </form>
                 </div>
               </div>
-              <h1 class="fs-4">
+              <h1 class="fs-4" id="result">
                 Result : {{count}}
               </h1>
             {% endif %}
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" id="data">
           {% if result and result%}
             {% for data in result %}
-              <div class="col-6 mb-3" onclick="location.href='/detail/{{data.nama.value}}'" >
+              <div class="col-6 mb-3 hospitals" id="{{data['subject']['value']}}" onclick="location.href='/detail/{{data.nama.value}}'" style="display: block;">
                 <div class="card mb-3 result" style="max-width: 580px; height: 225px;">
                   <div class="row g-0">
                     <div class="col-md-4">
@@ -115,5 +119,48 @@
         </div>
       </div>
     </div>
+    <script>
+      let hospitals = {{result | tojson}};
+      let checkBoxes = document.querySelectorAll(".btn-check");
+
+      function checkedHospitals() {
+        let selected = document.querySelectorAll('.btn-check:checked');
+        let selectedValues = Array.from(selected).map(function (checkbox) {
+          return checkbox.value;
+        });
+
+        // console.log(selectedValues)
+        const filteredHospitals = selectedValues.length > 0
+        ? hospitals.filter(hospital => checkHospital(hospital, selectedValues))
+        : hospitals;
+        updateHospitals(filteredHospitals);
+        // console.log(filteredHospitals)
+      }
+
+      function checkHospital(hospital, selectedValues) {
+        return selectedValues.includes(hospital["kelas"]["value"]);
+      }
+
+      function updateHospitals(filteredHospitals){
+        document.getElementById('result').innerHTML = `Result : ${filteredHospitals.length}`;
+        document.querySelectorAll('.hospitals').forEach(function (element) {
+          element.style.display = 'none';
+        });
+
+        if(filteredHospitals.length > 0){
+          filteredHospitals.forEach(function(hospital){
+            if(document.getElementById(hospital["subject"]["value"])){
+              document.getElementById(hospital["subject"]["value"]).style.display = "block"
+            }else{
+              document.getElementById(hospital["subject"]["value"]).style.display = "block";
+            };
+          })
+      }};
+
+      checkBoxes.forEach(checkbox => {
+        checkbox.addEventListener('click', checkedHospitals);
+      });
+      </script>
   </body>
-</html>
+  </html>
+  

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta property="og:image" content="{{ url_for('static', filename= 'images/logo.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1708">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Medan">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detail Kota</title>
@@ -99,7 +103,7 @@
               <div class="col-7">
                 <h5 class="fs-6 fw-normal">
                     {% if wikiResult[0]['tanggal_lahir'] is defined and wikiResult[0]['tanggal_lahir']['value'] %}
-                        {{ wikiResult[0]['tanggal_lahir']['value'] }}
+                        {{ tanggal}}
                     {% else %}
                         Data Tidak Tersedia
                     {% endif %}
@@ -220,16 +224,6 @@
                 Sumatera Utara meraih kesejahteraan melalui informasi yang jelas
                 dan terpercaya.
               </p>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="mt-1">
-              <strong class="mb-2">Pelajari Lebih Lanjut</strong>
-              <ul class="list-unstyled mt-1">
-                <li class="mb-1"><a href="#">Feedback</a></li>
-                <li class="mb-1"><a href="#">Terms of Service</a></li>
-                <li class="mb-1"><a href="#">Privacy Policy</a></li>
-              </ul>
             </div>
           </div>
         </div>

@@ -13,7 +13,8 @@
     "telepon": "schema:telepon",
     "pelayanan": "schema:pelayanan",
     "kota": "schema:kota",
-    "image_url": "schema:image_url"
+    "image_url": "schema:image_url",
+    "koordinat": "schema:koordinat"
   },
   "@graph": [
   {
@@ -3053,7 +3054,7 @@
       "Paru",
       "Covid-19"
     ],
-    "image_url": "https://tni-au.mil.id/konten/unggahan/2021/07/IMG_0231-1.jpg",
+    "image_url": "https://goalkes-images.s3.ap-southeast-1.amazonaws.com/hospitals/61G547p0MZ6vSdbh4CxtBg9ZvLdiOYD94eZi1KlU.jpg",
     "kota": "Kota Medan"
   },
   {
@@ -10068,7 +10069,7 @@
     "koordinat" : "3.597440627210495, 98.71733391064936",
     "telepon": "06188806888",
     "pelayanan": [],
-    "image_url": "https://media.licdn.com/dms/image/C5622AQHf_oy7qJrl3Q/feedshare-shrink_800/0/1673833282854?e=1703116800&v=beta&t=4wq7an_LmhldpwetnYadkdk9HrMBLKtj1yOSzBbPxtQ",
+    "image_url": "https://www.columbiaasia.com/indonesia/sites/default/files/hospital/hospitals-medan-contact.jpg",
     "kota": "Kota Medan"
   },
   {

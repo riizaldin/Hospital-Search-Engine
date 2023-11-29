@@ -1,0 +1,33 @@
+.result:hover{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.result{
+    transition: 0.2s ease-in;
+}
+.search {
+    border-radius: 1.5rem;
+    padding: 0.75rem;
+}
+#map {
+    height: 300px;
+    width: 100%;
+}
+.btn-check {
+position: absolute;
+clip: rect(0, 0, 0, 0);
+pointer-events: none;
+}
+.btn-check + .btn {
+border-radius: 10;
+padding: 0.4rem 0.8rem;
+font-size: 0.8rem;
+margin-right: 10px;
+}
+.btn-check:checked + .btn {
+background-color: green;
+color: white;
+border-color: green;
+}
+footer {
+    padding: 10px 0;
+}

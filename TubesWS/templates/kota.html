@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta property="og:image" content="{{ url_for('static', filename= 'images/logo.png') }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="1708">
+    <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
     <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Medan">
+    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi ruamh sakit secara lengkap.">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detail Kota</title>
@@ -28,7 +27,7 @@
     <header>
        <nav class="navbar bg-light p-3 shadow-sm fixed-top">
       <div class="container-fluid d-flex justify-content-between">
-        <a class="navbar-brand"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
         <form class="d-flex w-50" role="search" method="get" action="/search">
           <input
             class="search form-control me-2 shadow-sm"
@@ -45,7 +44,7 @@
     <div class="container py-5">
       <div class="container-fluid mt-5">
         <div class="row justify-content-start">
-          <div class="col-5">
+          <div class="col-md-5 col-12 mb-4 md-md-0">
             <div class="row mx-3">
               <div class="col-12">
                 <div class="card border border-3">
@@ -83,7 +82,7 @@
               </div>
             </div>
           </div>
-          <div class="col-7 items-center">
+          <div class="col-md-7 col-12 items-center">
             <h3>{{wikiResult[0]['label']['value']}}</h3>
             <hr class="hr mt-1" />
             <div class="row mb-1">

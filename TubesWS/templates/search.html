@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta property="og:image" content="{{ url_for('static', filename= 'images/logo.png') }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="1708">
-    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Medan">
+    <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Sumatera Utara">
+    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi ruamh sakit secara lengkap.">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
@@ -16,7 +16,7 @@
   <body>
     <nav class="navbar bg-light p-3 shadow-sm fixed-top">
       <div class="container-fluid d-flex justify-content-between">
-        <a class="navbar-brand"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
         <form class="d-flex w-50" role="search" method="get" action="/search">
           <input
             class="search form-control me-2 shadow-sm"
@@ -69,10 +69,10 @@
         <div class="row" id="data">
           {% if result and result%}
             {% for data in result %}
-              <div class="col-6 mb-3 hospitals" id="{{data['subject']['value']}}" onclick="location.href='/detail/{{data.nama.value}}'" style="display: block;">
-                <div class="card mb-3 result" style="max-width: 580px; height: 225px;">
+              <div class="col-lg-6 mb-3 col-12 hospitals" id="{{data['subject']['value']}}" onclick="location.href='/detail/{{data.nama.value}}'" style="display: block;">
+                <div class="card mb-3 result" style="max-width: 580px;">
                   <div class="row g-0">
-                    <div class="col-md-4">
+                    <div class="col-4">
                       <img
                         src="{{data['image_url']['value']}}"
                         class="img-top img-fluid rounded-start"
@@ -80,15 +80,15 @@
                         alt="..."
                       />
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-8 ">
                       <div class="card-body">
                         <div class="row">
                           <div class="col-12">
                             {% if "nama" in data %}
-                           <h5 class="card-title">{{data["nama"]["value"]}}</h5>
+                           <h5 class="card-title fs-4">{{data["nama"]["value"]}}</h5>
                            {% endif %}
                             {% if "alamat" in data %}
-                           <p class="card-text">
+                           <p class="card-text fs-7">
                              {{data["alamat"]["value"]}}
                            </p>
                            {% endif %}

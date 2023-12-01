@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Medan">
+    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi rumah sakit secara lengkap.">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail Kota</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename= 'css/style.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  </head>
+  <body>
+    <header>
+       <nav class="navbar bg-light p-3 shadow-sm fixed-top">
+      <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <form class="d-flex w-50" role="search" method="get" action="/search">
+          <input
+            class="search form-control me-2 shadow-sm"
+            type="search"
+            name="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <input type="submit" hidden>
+        </form>
+      </div>
+    </nav>
+    </header>
+    <div class="container py-5">
+      <div class="container-fluid mt-5">
+        <div class="row justify-content-start">
+          <div class="col-md-5 col-12 mb-4 md-md-0">
+            <div class="row mx-3">
+              <div class="col-12">
+                <div class="card border border-3">
+                  <div class="card-body">
+                    <div class="row my-2">
+                      <div class="col text-center mb-3">
+                        <img
+                          src="
+                          {% if wikiResult[0]['logo'] is defined and wikiResult[0]['logo']['value'] %}
+                            {{ wikiResult[0]['logo']['value'] }}
+                          {% endif %}                  
+                          "
+                          class="img-top img-fluid rounded"
+                          style="object-fit: scale-down; width: 30%"
+                          alt="Logo Tidak Tersedia"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <img
+                          src="
+                          {% if wikiResult[0]['gambar'] is defined and wikiResult[0]['gambar']['value'] %}
+                            {{ wikiResult[0]['gambar']['value'] }}
+                          {% endif %}
+                          "
+                          class="img-top img-fluid rounded"
+                          style="object-fit: cover; width: 100%; height: 250px"
+                          alt="Gambar Tidak Tersedia"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7 col-12 items-center">
+            <h3>{{wikiResult[0]['label']['value']}}</h3>
+            <hr class="hr mt-1" />
+            <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Nama Resmi</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal">
+                  {% if wikiResult[0]['nama'] is defined and wikiResult[0]['nama']['value'] %}
+                    {{wikiResult[0]['nama']['value']}}
+                  {% else %}
+                    Data Tidak Tersedia
+                  {% endif %}
+                </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Tanggal Lahir</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal">
+                    {% if wikiResult[0]['tanggal_lahir'] is defined and wikiResult[0]['tanggal_lahir']['value'] %}
+                        {{ tanggal}}
+                    {% else %}
+                        Data Tidak Tersedia
+                    {% endif %}
+                </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Jumlah Penduduk</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal">
+                  {% if wikiResult[0]['populasi'] is defined and wikiResult[0]['populasi']['value'] %}
+                    {{wikiResult[0]['populasi']['value']}}
+                  {% else %}
+                    Data Tidak Tersedia
+                  {% endif %}
+                </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Luas Daerah</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal">
+                  {% if wikiResult[0]['area'] is defined and wikiResult[0]['area']['value'] %}
+                    {{wikiResult[0]['area']['value']}} km<sup>2</sup>
+                  {% else %}
+                    Data Tidak Tersedia
+                  {% endif %}
+                </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Kode Pos</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal">
+                  {% if wikiResult[0]['kode_pos'] is defined and wikiResult[0]['kode_pos']['value'] %}
+                    {{wikiResult[0]['kode_pos']['value']}}
+                  {% else %}
+                    Data Tidak Tersedia
+                  {% endif %}
+                </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Website</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal">
+                  <a
+                      {% if wikiResult[0]['website'] is defined and wikiResult[0]['website']['value'] %}
+                        href="{{wikiResult[0]['website']['value']}}"
+                      {% endif %}
+                  >
+                    {% if wikiResult[0]['website'] is defined and wikiResult[0]['website']['value'] %}
+                      {{wikiResult[0]['website']['value']}}
+                    {% else %}
+                      Data Tidak Tersedia
+                    {% endif %}
+                  </a>
+                </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Koordinat</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal"> 
+                  {% if wikiResult[0]['koordinat'] is defined and wikiResult[0]['koordinat']['value'] %}
+                      {{latitude}}, {{longitude}}
+                  {% else %}
+                    Data Tidak Tersedia
+                  {% endif %}
+                  </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-12" id="map"></div>
+            </div>
+            <!-- <div class="row mb-1">
+              <div class="col-5"><h5 class="fs-6">Daftar Kecamatan</h5></div>
+              <div class="col-7">
+                <h5 class="fs-6 fw-normal">Medan Kota</h5>
+                <h5 class="fs-6 fw-normal">Medan Helvetia</h5>
+                <h5 class="fs-6 fw-normal">Medan Denai</h5>
+                <h5 class="fs-6 fw-normal">Medan Barat</h5>
+                <h5 class="fs-6 fw-normal">Medan Tuntungan</h5>
+                <h5 class="fs-6 fw-normal">Medan Amplas</h5>
+                <h5 class="fs-6 fw-normal">Medan Sunggal</h5>
+                <h5 class="fs-6 fw-normal">Medan Tembung</h5>
+                <h5 class="fs-6 fw-normal">Medan Marelan</h5>
+                <h5 class="fs-6 fw-normal">Medan Labuhan</h5>
+                <h5 class="fs-6 fw-normal">Medan Perjuangan</h5>
+                <h5 class="fs-6 fw-normal">Medan Timur</h5>
+                <h5 class="fs-6 fw-normal">Medan Selayang</h5>
+                <h5 class="fs-6 fw-normal">Medan Johor</h5>
+                <h5 class="fs-6 fw-normal">Medan Polonia</h5>
+                <h5 class="fs-6 fw-normal">Medan Baru</h5>
+                <h5 class="fs-6 fw-normal">Medan Area</h5>
+                <h5 class="fs-6 fw-normal">Medan Maimun</h5>
+                <h5 class="fs-6 fw-normal">Medan Deli</h5>
+                <h5 class="fs-6 fw-normal">Medan Petisah</h5>
+                <h5 class="fs-6 fw-normal">Medan Belawan</h5>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="bg-dark text-white">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="mt-1">
+              <strong class="mb-2">Tentang Kami</strong>
+              <p class="mt-2 mb-0 fs-6">
+                Sumut Sehat adalah situs web pencari rumah sakit yang
+                menyediakan informasi lengkap tentang rumah sakit di berbagai
+                kota dan kabupaten di wilayah Sumatera Utara. Temukan rumah
+                sakit, alamat, nomor telepon, dan layanan berbagai rumah sakit
+                dengan mudah. Sumut Sehat bertujuan untuk membantu masyarakat
+                Sumatera Utara meraih kesejahteraan melalui informasi yang jelas
+                dan terpercaya.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <div class="col text-center">
+            <p class="fs-7 mt-2">Copyright &copy; Kelompok 4B</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+<script>
+  let latitude = {{latitude | safe}};
+  let longitude = {{longitude | safe}};
+  console.log(latitude)
+  console.log(longitude)
+    var map = L.map('map').setView([latitude, longitude], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+    var marker = L.marker([latitude, longitude]).addTo(map);
+</script>

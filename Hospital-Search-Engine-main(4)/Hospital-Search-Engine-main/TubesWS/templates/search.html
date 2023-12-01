@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Sumatera Utara">
+    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi rumah sakit secara lengkap.">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+
+  </head>
+  <body>
+    <nav class="navbar bg-light p-3 shadow-sm fixed-top">
+      <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <form class="d-flex w-50" role="search" method="get" action="/search">
+          <input
+            class="search form-control me-2 shadow-sm"
+            type="search"
+            name="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <input type="submit" hidden>
+        </form>
+      </div>
+    </nav>
+    
+    <div class="container py-5" style="margin-top: 80px;">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col items-center">
+              <div class="mb-4">
+              {% if result %}
+              <div class="d-flex justify-content-end mx-5">
+                <div class="form-check form-check-inline">
+                  <h5 class="mt-1">Pilih Kelas</h5>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <input type="checkbox" id="checkboxA" value="A" class="btn-check">
+                    <label for="checkboxA" class="btn btn-outline-secondary">A</label>
+                    <input type="checkbox" id="checkboxB" value="B" class="btn-check">
+                    <label for="checkboxB" class="btn btn-outline-secondary">B</label>
+                    <input type="checkbox" id="checkboxC" value="C" class="btn-check">
+                    <label for="checkboxC" class="btn btn-outline-secondary">C</label>
+                    <input type="checkbox" id="checkboxD" value="D" class="btn-check">
+                    <label for="checkboxD" class="btn btn-outline-secondary">D</label>
+                    <input type="checkbox" id="checkboxD-Pratama" value="D PRATAMA" class="btn-check">
+                    <label for="checkboxD-Pratama" class="btn btn-outline-secondary">D Pratama</label>
+                    <input type="checkbox" id="checkbox-Belum-Ditetapkan" value="Belum Ditetapkan" class="btn-check">
+                    <label for="checkbox-Belum-Ditetapkan" class="btn btn-outline-secondary">Belum Ditetapkan</label>
+                </div>
+              </div>
+              <h1 class="fs-4" id="result">
+                Result : {{count}}
+              </h1>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="row" id="data">
+          {% if result and result%}
+            {% for data in result %}
+              <div class="col-lg-6 mb-3 col-12 hospitals" id="{{data['subject']['value']}}" onclick="location.href='/detail/{{data.nama.value}}'" style="display: block;">
+                <div class="card mb-3 result" style="max-width: 580px;">
+                  <div class="row g-0">
+                    <div class="col-4">
+                      <img
+                        src="{{data['image_url']['value']}}"
+                        class="img-top img-fluid rounded-start"
+                        style="object-fit: fill; width: 240px; height: 223px;"
+                        alt="..."
+                      />
+                    </div>
+                    <div class="col-8 ">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-12">
+                            {% if "nama" in data %}
+                           <h5 class="card-title fs-4">{{data["nama"]["value"]}}</h5>
+                           {% endif %}
+                            {% if "alamat" in data %}
+                           <p class="card-text fs-7">
+                             {{data["alamat"]["value"]}}
+                           </p>
+                           {% endif %}
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12 mt-4">
+                            <p class="card-text">
+                              <small class="text-muted">No. Telpon: 
+                                {% if "telepon" in data and data["telepon"]["value"] %}
+                                  {{data["telepon"]["value"]}}
+                                {% else %}
+                                  -
+                                {% endif %}
+                              </small>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <h3 class="mt-5 text-center">Tidak ada data yang tersedia tentang "{{search_query}}"</h3>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <script>
+      let hospitals = {{result | tojson}};
+      let checkBoxes = document.querySelectorAll(".btn-check");
+
+      function checkedHospitals() {
+        let selected = document.querySelectorAll('.btn-check:checked');
+        let selectedValues = Array.from(selected).map(function (checkbox) {
+          return checkbox.value;
+        });
+
+        const filteredHospitals = selectedValues.length > 0
+        ? hospitals.filter(hospital => checkHospital(hospital, selectedValues))
+        : hospitals;
+        updateHospitals(filteredHospitals);
+      }
+
+      function checkHospital(hospital, selectedValues) {
+        return selectedValues.includes(hospital["kelas"]["value"]);
+      }
+
+      function updateHospitals(filteredHospitals){
+        document.getElementById('result').innerHTML = `Result : ${filteredHospitals.length}`;
+        document.querySelectorAll('.hospitals').forEach(function (element) {
+          element.style.display = 'none';
+        });
+
+        if(filteredHospitals.length > 0){
+          filteredHospitals.forEach(function(hospital){
+            if(document.getElementById(hospital["subject"]["value"])){
+              document.getElementById(hospital["subject"]["value"]).style.display = "block"
+            }else{
+              document.getElementById(hospital["subject"]["value"]).style.display = "block";
+            };
+          })
+      }};
+
+      checkBoxes.forEach(checkbox => {
+        checkbox.addEventListener('click', checkedHospitals);
+      });
+      </script>
+  </body>
+  </html>
+  

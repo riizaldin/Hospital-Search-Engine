@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Sumatera Utara">
+    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi ruamh sakit secara lengkap.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  </head>
+  <body>
+    <nav class="navbar bg-light p-3 shadow-sm fixed-top">
+      <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <form class="d-flex w-50" role="search" method="get" action="/search">
+          <input
+            class="search form-control me-2 shadow-sm"
+            type="search"
+            name="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <input type="submit" hidden>
+        </form>
+      </div>
+    </nav>
+    <div class="container py-5">
+      <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-7 col-12 items-center">
+            <div class="mb-4">
+              <img
+                src="{{result[0]['image_url']['value']}}"
+                class="img-top img-fluid rounded"
+                style="object-fit: cover; width: 100%; height: 100%"
+                alt="..."
+              />
+            </div>
+            <h1 class="mt-4">Layanan</h1>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Pelayanan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if result[0] and result[0]['listPelayanan'] and result[0]['listPelayanan']['value'] %}
+                  {% for layanan in result[0]['listPelayanan']['value'] %}
+                  <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{layanan}}</td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <th colspan="2">Data tidak tersedia</th>
+                  </tr>
+                {% endif %}
+
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-5 col-12">
+            <div class="row mx-3">
+              <div class="col-12">
+                <h2 class="text-center">{{name}}</h2>
+                <div class="card border border-3">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col mb-3">
+                        <div id="map">
+
+                        </div>
+                      </div>
+                    </div>
+                  <div class="row">
+                  <div class="col-5"><h5 class="fs-6">Lokasi</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['alamat'] is defined and result[0]['alamat']['value'] %}
+                                {{ result[0]['alamat']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Telepon</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['telepon'] is defined and result[0]['telepon']['value'] %}
+                                {{ result[0]['telepon']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Jenis</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['jenis'] is defined and result[0]['jenis']['value'] %}
+                                {{ result[0]['jenis']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Kelas</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['kelas'] is defined and result[0]['kelas']['value'] %}
+                                {{ result[0]['kelas']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">BLU</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['blu'] is defined and result[0]['blu']['value'] %}
+                                {{ result[0]['blu']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Direktur</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['direktur'] is defined and result[0]['direktur']['value'] %}
+                                {{ result[0]['direktur']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Luas Tanah</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['luas_tanah'] is defined and result[0]['luas_tanah']['value'] %}
+                                {{ result[0]['luas_tanah']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Luas Bangunan</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['luas_bangunan'] is defined and result[0]['luas_bangunan']['value'] %}
+                                {{ result[0]['luas_bangunan']['value'] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5"><h5 class="fs-6">Kota</h5></div>
+                    <div class="col-7">
+                        <h5 class="fs-6 fw-normal">
+                            {% if result[0]['kota'] is defined and result[0]['kota']['value'] %}
+                            <a href="/kota/{{result[0]['kota']['value']}}" class="text-decoration-none">
+                                {{ result[0]['kota']['value'] }}
+                            </a>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <h3 class="mt-5">Rumah Sakit Lainnya</h3>
+                {% for data in random %}
+                <div class="card mb-3 result" onclick="location.href='/detail/{{data.nama.value}}'" style="max-width: 580px">
+                  <div class="row g-0">
+                    <div class="col-md-4">
+                      <img
+                        src="{{data['image_url']['value']}}"
+                        class="img-top img-fluid rounded-start"
+                        style="object-fit: cover; width: 100%; height: 100%"
+                        alt="{{data['nama']['value']}}"
+                      />
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">{{data['nama']['value']}}</h5>
+                        <p class="card-text">
+                          Alamat: {{data['alamat']['value']}}
+                        </p>
+                        <p class="card-text">
+                          <small class="text-muted">Telepon: {{data['telepon']['value']}}</small>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    let latitude = {{latitude | safe}};
+    let longitude = {{longitude | safe}};
+    var map = L.map('map').setView([latitude, longitude], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+    var marker = L.marker([latitude, longitude]).addTo(map);
+  </script>
+</html>

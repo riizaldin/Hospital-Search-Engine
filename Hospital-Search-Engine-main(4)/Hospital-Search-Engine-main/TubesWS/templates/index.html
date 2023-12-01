@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Sumut Sehat</title>
+    <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Sumatera Utara">
+    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi rumah sakit secara lengkap.">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,800" rel="stylesheet" />
+    <link href="{{ url_for('static', filename= 'css/main.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'leaflet/leaflet.css') }}" />
+    <script src="{{ url_for('static', filename= 'leaflet/leaflet.js') }}"></script>
+    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+
+  </head>
+  <body>
+    <div class="s004">
+        <form method="get" action="/search">
+          <fieldset>
+          <legend class="legend"><img src="{{ url_for('static', filename= 'images/logo.png ') }}" alt="logo" width="350px"></legend>
+          <form class="d-flex w-50" role="search">
+            <input class="search form-control me-2 p-3 shadow-sm" name="search" type="search" placeholder="Masukkan Rumah Sakit, Alamat atau Pelayanan" aria-label="Search">
+            <input type="submit" hidden />
+        </form>
+        </fieldset>
+      </form>
+    </div>
+    <script src="{{ url_for('static', filename= 'js/extention/choices.js') }}"></script>
+    <script>
+      var textPresetVal = new Choices('#choices-text-preset-values',
+      {
+        removeItemButton: true,
+      });
+
+    </script>
+  </body>
+</html>

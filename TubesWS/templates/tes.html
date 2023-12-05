@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta property="og:image" content="{{ url_for('static', filename= 'images/logo.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1708">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Medan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+
+  </head>
+  <body>
+    <nav class="navbar bg-light p-3 shadow-sm fixed-top">
+      <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <form class="d-flex w-50" role="search" method="get" action="/search">
+          <input
+            class="search form-control me-2 shadow-sm"
+            type="search"
+            name="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <input type="submit" hidden>
+        </form>
+      </div>
+    </nav>
+    
+    <div class="container py-5" style="margin-top: 80px;">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col items-center">
+                <div class="mb-4">
+                {% if result %}
+                <h1 class="fs-4" id="result">
+                  Result : {{count}}
+                </h1>
+                {% endif %}
+              </div>
+            </div>
+        </div>
+        <div class="row" id="data">
+          {% if result and result%}
+            {% for data in result %}
+              <div class="col-6 mb-3 hospitals" id="{{data['subject']['value']}}" onclick="location.href='/detail/{{data.nama.value}}'" style="display: block;">
+                <div class="card mb-3 result" style="max-width: 580px; height: 225px;">
+                  <div class="row g-0">
+                    <div class="col-md-4">
+                      <img
+                        src="{{data['image_url']['value']}}"
+                        class="img-top img-fluid rounded-start"
+                        style="object-fit: fill; width: 240px; height: 223px;"
+                        alt="..."
+                      />
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-12">
+                            {% if "nama" in data %}
+                           <h5 class="card-title">{{data["nama"]["value"]}}</h5>
+                           {% endif %}
+                            {% if "alamat" in data %}
+                           <p class="card-text">
+                             {{data["alamat"]["value"]}}
+                           </p>
+                           {% endif %}
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12 mt-4">
+                            <p class="card-text">
+                              <small class="text-muted">No. Telpon: 
+                                {% if "telepon" in data and data["telepon"]["value"] %}
+                                  {{data["telepon"]["value"]}}
+                                {% else %}
+                                  -
+                                {% endif %}
+                              </small>
+                              <br>
+                              <small class="text-muted">Lat and Long: 
+                                {{latitude}}, {{longitude}}
+                              </small>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            {% endfor %}
+            <div class="row">
+                <div class="col">
+                    <h2>Closest Hospitals</h2>
+                    <ul>
+                        {% for detail in closest_hospitals_details %}
+                            <li>
+                                <a href="/detail/{{ detail['dat']['nama']['value'] }}">{{ detail['dat']['nama']['value'] }}</a>
+                                <h3>{{ detail['dat']['nama']['value'] }}</h3>
+                                <p>Distance: {{ detail['distance'] }} km</p>
+                                {% if detail['dat'].get('alamat') %}
+                                    <p>Address: {{ detail['dat']['alamat']['value'] }}</p>
+                                {% endif %}
+                                {% if detail['dat'].get('telepon') %}
+                                    <p>Telephone: {{ detail['dat']['telepon']['value'] }}</p>
+                                {% endif %}
+                                {% if detail['dat'].get('image_url') %}
+                                    <img src="{{ detail['dat']['image_url']['value'] }}" alt="Hospital Image" style="max-width: 200px;">
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+          {% else %}
+            <h3 class="mt-5 text-center">Tidak ada data yang tersedia tentang</h3>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  

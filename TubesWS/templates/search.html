@@ -2,21 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
-    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Sumatera Utara">
-    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi ruamh sakit secara lengkap.">
+    <meta property="og:image" content="https://iili.io/JxPS6kQ.png" />
+    <meta
+      property="og:title"
+      content="SumutSehat - Situs Pencarian Rumah Sakit di Sumatera Utara"
+    />
+    <meta
+      property="og:description"
+      content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi rumah sakit secara lengkap."
+    />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
-    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
-
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename= 'css/style.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}"
+      type="image/png"
+    />
   </head>
   <body>
     <nav class="navbar bg-light p-3 shadow-sm fixed-top">
       <div class="container-fluid d-flex justify-content-between">
-        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <a class="navbar-brand" href="/"
+          ><img
+            src="{{ url_for('static', filename= 'images/logo.png') }}"
+            alt="logo"
+            width="120px"
+        /></a>
         <form class="d-flex w-50" role="search" method="get" action="/search">
           <input
             class="search form-control me-2 shadow-sm"
@@ -25,120 +45,279 @@
             placeholder="Search"
             aria-label="Search"
           />
-          <input type="submit" hidden>
+          <input type="submit" hidden />
         </form>
       </div>
     </nav>
-    
-    <div class="container py-5" style="margin-top: 80px;">
+
+    <div class="container py-5" style="margin-top: 80px">
       <div class="container-fluid">
         <div class="row justify-content-center">
           <div class="col items-center">
-              <div class="mb-4">
+            <div class="mb-4">
               {% if result %}
               <div class="d-flex justify-content-end mx-5">
-                <div class="form-check form-check-inline">
-                  <h5 class="mt-1">Pilih Kelas</h5>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <form>
-                    <input type="checkbox" id="checkboxA" value="A" class="btn-check">
-                    <label for="checkboxA" class="btn btn-outline-secondary">A</label>
-                  </form>
-                  <form>
-                    <input type="checkbox" id="checkboxB" value="B" class="btn-check">
-                    <label for="checkboxB" class="btn btn-outline-secondary">B</label>
-                  </form>
-                  <form>
-                    <input type="checkbox" id="checkboxC" value="C" class="btn-check">
-                    <label for="checkboxC" class="btn btn-outline-secondary">C</label>
-                  </form>
-                  <form>
-                    <input type="checkbox" id="checkboxD" value="D" class="btn-check">
-                    <label for="checkboxD" class="btn btn-outline-secondary">D</label>
-                  </form>
+                <div class="form-check">
+                  <button
+                    class="btn btn-primary"
+                    style="
+                      --bs-btn-padding-y: 0.5rem;
+                      --bs-btn-padding-x: 2rem;
+                      --bs-btn-font-size: 1rem;
+                    "
+                    type="submit"
+                    onclick="togglePopup()"
+                  >
+                    Filter
+                  </button>
                 </div>
               </div>
-              <h1 class="fs-4" id="result">
-                Result : {{count}}
-              </h1>
-            {% endif %}
+
+              <h1 class="fs-4" id="result">Result : {{count}}</h1>
+              {% endif %}
             </div>
           </div>
         </div>
         <div class="row" id="data">
-          {% if result and result%}
-            {% for data in result %}
-              <div class="col-lg-6 mb-3 col-12 hospitals" id="{{data['subject']['value']}}" onclick="location.href='/detail/{{data.nama.value}}'" style="display: block;">
-                <div class="card mb-3 result" style="max-width: 580px;">
-                  <div class="row g-0">
-                    <div class="col-4">
-                      <img
-                        src="{{data['image_url']['value']}}"
-                        class="img-top img-fluid rounded-start"
-                        style="object-fit: fill; width: 240px; height: 223px;"
-                        alt="..."
-                      />
+          {% if result and result%} {% for data in result %}
+          <div
+            class="col-lg-6 mb-3 col-12 hospitals"
+            id="{{data['subject']['value']}}"
+            onclick="location.href='/detail/{{data.nama.value}}'"
+            style="display: block"
+          >
+            <div class="card mb-3 result" style="max-width: 580px">
+              <div class="row g-0">
+                <div class="col-4">
+                  <img
+                    src="{{data['image_url']['value']}}"
+                    class="img-top img-fluid rounded-start"
+                    style="object-fit: fill; width: 240px; height: 223px"
+                    alt="..."
+                  />
+                </div>
+                <div class="col-8">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12">
+                        {% if "nama" in data %}
+                        <h5 class="card-title fs-4">
+                          {{data["nama"]["value"]}}
+                        </h5>
+                        {% endif %} {% if "alamat" in data %}
+                        <p class="card-text fs-7">
+                          {{data["alamat"]["value"]}}
+                        </p>
+                        {% endif %}
+                      </div>
                     </div>
-                    <div class="col-8 ">
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-12">
-                            {% if "nama" in data %}
-                           <h5 class="card-title fs-4">{{data["nama"]["value"]}}</h5>
-                           {% endif %}
-                            {% if "alamat" in data %}
-                           <p class="card-text fs-7">
-                             {{data["alamat"]["value"]}}
-                           </p>
-                           {% endif %}
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-12 mt-4">
-                            <p class="card-text">
-                              <small class="text-muted">No. Telpon: 
-                                {% if "telepon" in data and data["telepon"]["value"] %}
-                                  {{data["telepon"]["value"]}}
-                                {% else %}
-                                  -
-                                {% endif %}
-                              </small>
-                            </p>
-                          </div>
-                        </div>
+                    <div class="row">
+                      <div class="col-12 mt-4">
+                        <p class="card-text">
+                          <small class="text-muted"
+                            >No. Telpon: {% if "telepon" in data and
+                            data["telepon"]["value"] %}
+                            {{data["telepon"]["value"]}} {% else %} - {% endif
+                            %}
+                          </small>
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            {% endfor %}
-          {% else %}
-            <h3 class="mt-5 text-center">Tidak ada data yang tersedia tentang "{{search_query}}"</h3>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <h3 class="mt-5 text-center">
+            Tidak ada data yang tersedia tentang "{{search_query}}"
+          </h3>
           {% endif %}
+        </div>
+        <!-- Popup overlay -->
+        <div id="popupOverlay" class="overlay">
+          <div class="container popup">
+            <div class="row justify-content-center">
+              
+              <div class="col-md-7">
+                <!-- filter options -->
+                <h3>Kota</h3>
+                <input type="checkbox" id="checkboxAsahan" value="Asahan" class="btn-check">
+                <label for="checkboxAsahan" class="btn btn-outline-secondary mb-2">Asahan</label>
+            
+                <input type="checkbox" id="checkboxBatuBara" value="Batu Bara" class="btn-check">
+                <label for="checkboxBatuBara" class="btn btn-outline-secondary mb-2">Batu Bara</label>
+            
+                <input type="checkbox" id="checkboxBinjai" value="Kota Binjai" class="btn-check">
+                <label for="checkboxBinjai" class="btn btn-outline-secondary mb-2">Binjai</label>
+            
+                <input type="checkbox" id="checkboxDairi" value="Dairi" class="btn-check">
+                <label for="checkboxDairi" class="btn btn-outline-secondary mb-2">Dairi</label>
+            
+                <input type="checkbox" id="checkboxDeliSerdang" value="Deli Serdang" class="btn-check">
+                <label for="checkboxDeliSerdang" class="btn btn-outline-secondary mb-2">Deli Serdang</label>
+            
+                <input type="checkbox" id="checkboxGunungsitoli" value="Kota Gunungsitoli" class="btn-check">
+                <label for="checkboxGunungsitoli" class="btn btn-outline-secondary mb-2">Gunungsitoli</label>
+            
+                <input type="checkbox" id="checkboxHumbangHasundutan" value="Humbang Hasundutan" class="btn-check">
+                <label for="checkboxHumbangHasundutan" class="btn btn-outline-secondary mb-2">Humbang Hasundutan</label>
+            
+                <input type="checkbox" id="checkboxKaro" value="Karo" class="btn-check">
+                <label for="checkboxKaro" class="btn btn-outline-secondary mb-2">Karo</label>
+            
+                <input type="checkbox" id="checkboxKotaMedan" value="Kota Medan" class="btn-check">
+                <label for="checkboxKotaMedan" class="btn btn-outline-secondary mb-2">Medan</label>
+            
+                <input type="checkbox" id="checkboxKotaPadangSidempuan" value="Kota Padang Sidempuan" class="btn-check">
+                <label for="checkboxKotaPadangSidempuan" class="btn btn-outline-secondary mb-2">Padang Sidempuan</label>
+            
+                <input type="checkbox" id="checkboxKotaPematangSiantar" value="Kota Pematang Siantar" class="btn-check">
+                <label for="checkboxKotaPematangSiantar" class="btn btn-outline-secondary mb-2">Pematang Siantar</label>
+            
+                <input type="checkbox" id="checkboxKotaSibolga" value="Kota Sibolga" class="btn-check">
+                <label for="checkboxKotaSibolga" class="btn btn-outline-secondary mb-2">Sibolga</label>
+            
+                <input type="checkbox" id="checkboxKotaTanjungBalai" value="Kota Tanjung Balai" class="btn-check">
+                <label for="checkboxKotaTanjungBalai" class="btn btn-outline-secondary mb-2">Tanjung Balai</label>
+            
+                <input type="checkbox" id="checkboxKotaTebingTinggi" value="Kota Tebing Tinggi" class="btn-check">
+                <label for="checkboxKotaTebingTinggi" class="btn btn-outline-secondary mb-2">Tebing Tinggi</label>
+            
+                <input type="checkbox" id="checkboxLabuhanBatu" value="Labuhan Batu" class="btn-check">
+                <label for="checkboxLabuhanBatu" class="btn btn-outline-secondary mb-2">Labuhan Batu</label>
+            
+                <input type="checkbox" id="checkboxLabuhanBatuSelatan" value="Labuhan Batu Selatan" class="btn-check">
+                <label for="checkboxLabuhanBatuSelatan" class="btn btn-outline-secondary mb-2">Labuhan Batu Selatan</label>
+            
+                <input type="checkbox" id="checkboxLabuhanBatuUtara" value="Labuhan Batu Utara" class="btn-check">
+                <label for="checkboxLabuhanBatuUtara" class="btn btn-outline-secondary mb-2">Labuhan Batu Utara</label>
+            
+                <input type="checkbox" id="checkboxLangkat" value="Langkat" class="btn-check">
+                <label for="checkboxLangkat" class="btn btn-outline-secondary mb-2">Langkat</label>
+            
+                <input type="checkbox" id="checkboxMandailingNatal" value="Mandailing Natal" class="btn-check">
+                <label for="checkboxMandailingNatal" class="btn btn-outline-secondary mb-2">Mandailing Natal</label>
+            
+                <input type="checkbox" id="checkboxNias" value="Nias" class="btn-check">
+                <label for="checkboxNias" class="btn btn-outline-secondary mb-2">Nias</label>
+            
+                <input type="checkbox" id="checkboxNiasBarat" value="Nias Barat" class="btn-check">
+                <label for="checkboxNiasBarat" class="btn btn-outline-secondary mb-2">Nias Barat</label>
+            
+                <input type="checkbox" id="checkboxNiasSelatan" value="Nias Selatan" class="btn-check">
+                <label for="checkboxNiasSelatan" class="btn btn-outline-secondary mb-2">Nias Selatan</label>
+            
+                <input type="checkbox" id="checkboxNiasUtara" value="Nias Utara" class="btn-check">
+                <label for="checkboxNiasUtara" class="btn btn-outline-secondary mb-2">Nias Utara</label>
+            
+                <input type="checkbox" id="checkboxPakpakBharat" value="Pakpak Bharat" class="btn-check">
+                <label for="checkboxPakpakBharat" class="btn btn-outline-secondary mb-2">Pakpak Bharat</label>
+            
+                <input type="checkbox" id="checkboxPadangLawas" value="Padang Lawas" class="btn-check">
+                <label for="checkboxPadangLawas" class="btn btn-outline-secondary mb-2">Padang Lawas</label>
+            
+                <input type="checkbox" id="checkboxPadangLawasUtara" value="Padang Lawas Utara" class="btn-check">
+                <label for="checkboxPadangLawasUtara" class="btn btn-outline-secondary mb-2">Padang Lawas Utara</label>
+            
+                <input type="checkbox" id="checkboxPematangSiantar" value="Kota Pematang Siantar" class="btn-check">
+                <label for="checkboxPematangSiantar" class="btn btn-outline-secondary mb-2">Pematang Siantar</label>
+            
+                <input type="checkbox" id="checkboxSamosir" value="Samosir" class="btn-check">
+                <label for="checkboxSamosir" class="btn btn-outline-secondary mb-2">Samosir</label>
+            
+                <input type="checkbox" id="checkboxSerdangBedagai" value="Serdang Bedagai" class="btn-check">
+                <label for="checkboxSerdangBedagai" class="btn btn-outline-secondary mb-2">Serdang Bedagai</label>
+            
+                <input type="checkbox" id="checkboxSimalungun" value="Simalungun" class="btn-check">
+                <label for="checkboxSimalungun" class="btn btn-outline-secondary mb-2">Simalungun</label>
+            
+                <input type="checkbox" id="checkboxTapanuliSelatan" value="Tapanuli Selatan" class="btn-check">
+                <label for="checkboxTapanuliSelatan" class="btn btn-outline-secondary mb-2">Tapanuli Selatan</label>
+            
+                <input type="checkbox" id="checkboxTapanuliTengah" value="Tapanuli Tengah" class="btn-check">
+                <label for="checkboxTapanuliTengah" class="btn btn-outline-secondary mb-2">Tapanuli Tengah</label>
+            
+                <input type="checkbox" id="checkboxTapanuliUtara" value="Tapanuli Utara" class="btn-check">
+                <label for="checkboxTapanuliUtara" class="btn btn-outline-secondary mb-2">Tapanuli Utara</label>
+            
+                <input type="checkbox" id="checkboxTobaSamosir" value="Toba Samosir" class="btn-check">
+                <label for="checkboxTobaSamosir" class="btn btn-outline-secondary mb-2">Toba Samosir</label>
+            
+            </div>
+            <div class="col-md-5">
+              <!-- Kelas filter options -->
+              <h3>Kelas</h3>
+                <input type="checkbox" id="checkboxA" value="A" class="btn-check-kelas">
+                <label for="checkboxA" class="btn btn-outline-secondary">A</label>
+                <input type="checkbox" id="checkboxB" value="B" class="btn-check-kelas">
+                <label for="checkboxB" class="btn btn-outline-secondary">B</label>
+                <input type="checkbox" id="checkboxC" value="C" class="btn-check-kelas">
+                <label for="checkboxC" class="btn btn-outline-secondary">C</label>
+                <input type="checkbox" id="checkboxD" value="D" class="btn-check-kelas">
+                <label for="checkboxD" class="btn btn-outline-secondary">D</label>
+                <input type="checkbox" id="checkboxD-pratama" value="D PRATAMA" class="btn-check-kelas">
+                <label for="checkboxD-pratama" class="btn btn-outline-secondary">D Pratama</label>
+                <input type="checkbox" id="checkboxBelumDitetapkan" value="Belum Ditetapkan" class="btn-check-kelas">
+                <label for="checkboxBelumDitetapkan" class="btn btn-outline-secondary mt-2">Belum Ditetapkan</label>
+            </div>
+            
+            <button onclick="togglePopup()" class="btn btn-secondary btn-sm mt-3 w-25">Close</button>
+          </div>
         </div>
       </div>
     </div>
     <script>
       let hospitals = {{result | tojson}};
-      let checkBoxes = document.querySelectorAll(".btn-check");
+      let classCheckboxes = document.querySelectorAll(".btn-check-kelas");
+      let cityCheckboxes = document.querySelectorAll(".btn-check");
+      
+      const cities = [];
+      cityCheckboxes.forEach(box => {
+        cities.push(box.value); 
+      });
 
-      function checkedHospitals() {
-        let selected = document.querySelectorAll('.btn-check:checked');
-        let selectedValues = Array.from(selected).map(function (checkbox) {
-          return checkbox.value;
-        });
+      const classes = [];
+      classCheckboxes.forEach(box => {
+        classes.push(box.value);
+      });
 
-        // console.log(selectedValues)
-        const filteredHospitals = selectedValues.length > 0
-        ? hospitals.filter(hospital => checkHospital(hospital, selectedValues))
-        : hospitals;
-        updateHospitals(filteredHospitals);
-        // console.log(filteredHospitals)
+      let selectedCities = cities;
+      let selectedClasses = classes;
+
+      function checkHospital(hospital) {
+        return selectedCities.includes(hospital["kota"]["value"]) && 
+              selectedClasses.includes(hospital["kelas"]["value"]);  
       }
 
-      function checkHospital(hospital, selectedValues) {
-        return selectedValues.includes(hospital["kelas"]["value"]);
+      function updateFilters() {
+
+        const filteredHospitals = hospitals.filter(checkHospital);
+        updateHospitals(filteredHospitals);
+      }
+
+      cityCheckboxes.forEach(box => {
+        box.addEventListener('click', () => {
+          selectedCities = getSelectedCities();
+          updateFilters(); 
+        });
+      });
+
+      classCheckboxes.forEach(box => {
+        box.addEventListener('click', () => {
+          selectedClasses = getSelectedClasses(); 
+          updateFilters();
+        });  
+      });
+
+      function getSelectedCities() {
+        const checked = Array.from(cityCheckboxes).filter(box => box.checked);
+        return checked.length > 0 ? checked.map(box => box.value) : cities;
+      }
+
+      function getSelectedClasses() {
+        const checked = Array.from(classCheckboxes).filter(box => box.checked);
+        return checked.length > 0 ? checked.map(box => box.value) : classes;
       }
 
       function updateHospitals(filteredHospitals){
@@ -157,10 +336,11 @@
           })
       }};
 
-      checkBoxes.forEach(checkbox => {
-        checkbox.addEventListener('click', checkedHospitals);
-      });
-      </script>
+      // Function to toggle the popup visibility
+      function togglePopup() {
+        var popup = document.getElementById("popupOverlay");
+        popup.style.display = (popup.style.display === "none" || popup.style.display === "") ? "flex" : "none";
+      }
+    </script>
   </body>
-  </html>
-  
+</html>

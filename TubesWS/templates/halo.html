@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta property="og:image" content="{{ url_for('static', filename= 'images/logo.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1708">
+    <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Medan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar bg-light p-3 shadow-sm fixed-top">
+      <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
+        <form class="d-flex w-50" role="search" method="get" action="/search">
+          <input
+            class="search form-control me-2 shadow-sm"
+            type="search"
+            name="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <input type="submit" hidden>
+        </form>
+      </div>
+    </nav>
+    
+    <div class="container py-5" style="margin-top: 80px;">
+      <div class="container-fluid">
+            <div class="row">
+                <!-- <div class="col">
+                    <h2>Closest Hospitals</h2>
+                    <ul>
+                      halo
+                    </ul>
+                </div> -->
+                OOO
+                <div id="loading-icon">
+                  LOADING BOS
+                </div>
+               <div id="location-content" style="display: none;"></div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+<script>
+function showLoadingIcon() {
+    document.getElementById('loading-icon').style.display = 'block';
+}
+
+function updateLocationContent(locationData) {
+    document.getElementById('loading-icon').style.display = 'none';
+    document.getElementById('location-content').style.display = 'block';
+    // Update the content with locationData
+    locationData.forEach(element => {
+      console.log(element)
+    });
+}
+
+
+  // Function to get the user's current location
+function getCurrentLocation() {
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 2000
+    };
+    navigator.geolocation.getCurrentPosition(success, error, options);
+    // console.log("halo123");
+}
+
+// Success callback when the user's location is obtained
+function success(position) {
+    const { latitude, longitude, accuracy } = position.coords;
+    console.log(`Latitude: ${latitude}`);
+    console.log(`Longitude: ${longitude}`);
+    const dict_values = {
+        "latitude": latitude,
+        "longitude": longitude
+    };
+    const s = dict_values;
+    console.log(JSON.stringify(s))
+    $.ajax({
+        url: "/tes3",
+        type: "POST",
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        data:  JSON.stringify(s),
+        success: function (hospitals) {
+          updateLocationContent(hospitals);
+          console.log(hospitals);
+        },
+        error: function () {
+        var errorMessage = 'Error getting location.';
+        updateLocationContent(errorMessage);
+      }
+    });
+}
+function error(err) {
+    const errorMessage = err.code === 1 ? "Please allow geolocation access" : "Cannot get current location";
+    alert(errorMessage);
+}
+// Initiate getting the user's current location
+getCurrentLocation();
+
+</script>
+  

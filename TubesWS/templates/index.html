@@ -3,7 +3,7 @@
     <title>Sumut Sehat</title>
     <meta property="og:image" content="https://iili.io/JxPS6kQ.png">
     <meta property="og:title" content="SumutSehat - Situs Pencarian Rumah Sakit di Sumatera Utara">
-    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi ruamh sakit secara lengkap.">
+    <meta property="og:description" content="Sumut Sehat adalah situs pencarian Rumah Sakit di Sumatera Utara yang menghadirkan informasi rumah sakit secara lengkap.">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename= 'leaflet/leaflet.css') }}" />
     <script src="{{ url_for('static', filename= 'leaflet/leaflet.js') }}"></script>
     <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
   </head>
   <body>
@@ -28,12 +29,116 @@
         </fieldset>
       </form>
     </div>
+    <a href="#location-content">
+      <div class="chevron-button">
+        <div class="nearest">
+          Nearest Hospital
+        </div>
+        <div class="chevron-icon"></div>
+      </div>
+    </a>
+    <div class="text-center mt-4 mb-3 fs-3">
+      Rumah Sakit Terdekat Dengan Lokasi Anda
+    </div>
+    <div class="container-fluid">
+      <div class="row my-5" id="location-content">
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="text-center mt-4">
+      <div class="lds-ring" id="loading-icon"><div></div><div></div><div></div><div></div></div>
+    </div>
+
     <script src="{{ url_for('static', filename= 'js/extention/choices.js') }}"></script>
     <script>
-      var textPresetVal = new Choices('#choices-text-preset-values',
-      {
-        removeItemButton: true,
-      });
+      const hospitalTemplate = hospitalData => {
+        return `
+        <div class="col-6 mb-3 hospitals" style="display: block;">
+          <div class="card mb-3 result" style="max-width: 580px; margin-left: 10% !important;"  onclick="location.href='/detail/${hospitalData.data.nama.value}'">
+            <div class="row g-0">
+              <div class="col-4">
+                <img
+                  src="${hospitalData.data.image_url.value}"
+                  class="img-top img-fluid rounded-start"
+                  style="object-fit: fill; width: 240px; height: 223px;"
+                  alt="..."
+                />
+              </div>
+              <div class="col-8 ">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-12">
+                      <h5 class="card-title fs-4">${hospitalData.data.nama.value}</h5>
+                      <p class="card-text fs-7">
+                        ${hospitalData.data.alamat.value}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 mt-4">
+                      <p class="card-text">
+                        <small class="text-muted">Jarak: 
+                            ${hospitalData.distance} km
+                        </small>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+      };
+
+      function updateLocationContent(locationData) {
+          document.getElementById('loading-icon').style.display = 'none';
+          locationData.forEach(element => {
+            const html = hospitalTemplate(element); 
+            document.getElementById('location-content').innerHTML += html;
+          });
+      }
+
+      // Function to get the user's current location
+      function getCurrentLocation() {
+          const options = {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 2000
+          };
+          navigator.geolocation.getCurrentPosition(success, error, options);
+      }
+
+      // Success callback when the user's location is obtained
+      function success(position) {
+          const { latitude, longitude, accuracy } = position.coords;
+          const dict_values = {
+              "latitude": latitude,
+              "longitude": longitude
+          };
+          const s = dict_values;
+          $.ajax({
+            url: "/getLocation",
+            type: "POST",
+            dataType: 'json',
+            contentType: "application/json; charset=UTF-8",
+            data:  JSON.stringify(s),
+            success: function (hospitals) {
+              updateLocationContent(hospitals);
+              console.log(hospitals);
+            },
+            error: function () {
+              var errorMessage = 'Error getting location.';
+              updateLocationContent(errorMessage);
+            }
+          });
+      }
+      function error(err) {
+          const errorMessage = err.code === 1 ? "Please allow geolocation access" : "Cannot get current location";
+          alert(errorMessage);
+      }
+      getCurrentLocation();
 
     </script>
   </body>

@@ -151,8 +151,8 @@ def detail(hospital):
         tenaga.append(row_data)
     koordinat = result[0]['koordinat']['value']
     koordinat = koordinat.split(',')
-    latitude = koordinat[0]
-    longitude = koordinat[1] 
+    latitude_rs = koordinat[0]
+    longitude_rs = koordinat[1]
     allQuery = f"""
     PREFIX schema: <http://websemantikkelompok6.org/>
     SELECT ?subject ?koordinat ?nama ?alamat ?telepon ?image_url
@@ -221,7 +221,7 @@ def detail(hospital):
         if len(closest_hospitals_details) == 3:  # Stop fetching once three hospitals are found
             break
 
-    return render_template("detail.html", kamar=kamar, tenaga=tenaga, result=result, name=hospital, coordinates=coordinates_dict, distances=distances_dict, closest_hospitals_details=closest_hospitals_details, latitude = latitude, longitude = longitude)
+    return render_template("detail.html", kamar=kamar, tenaga=tenaga, result=result, name=hospital, coordinates=coordinates_dict, distances=distances_dict, closest_hospitals_details=closest_hospitals_details, latitude = latitude_rs, longitude = longitude_rs)
 
 
 @app.route('/kota/<kota>')

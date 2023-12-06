@@ -314,7 +314,8 @@
         maxZoom: 19,
     }).addTo(map);
     var marker = L.marker([latitude, longitude]).addTo(map);
-
+    console.log(latitude);
+    console.log(longitude);
     document.addEventListener("DOMContentLoaded", function () {
     // Get all navigation items
     var navItems = document.querySelectorAll("#myTabs .nav-link");

@@ -41,12 +41,50 @@
                 alt="..."
               />
             </div>
-            <h1 class="mt-4">Layanan</h1>
-            <table class="table table-striped">
+            <ul class="nav nav-pills nav-justified" id="myTabs">
+              <li class="nav-item">
+                <a class="nav-link active" href="#kamar">Kamar</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#layanan">Layanan</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#tenaga">Tenaga</a>
+              </li>
+            </ul>
+            <!-- kamar -->
+            <table class="table table-striped" id="tableKamar">
               <thead>
                 <tr>
                   <th scope="col">No</th>
-                  <th scope="col">Pelayanan</th>
+                  <th scope="col">Kamar</th>
+                  <th scope="col">Jumlah</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if kamar %}
+                  {% for each_kamar in kamar %}
+                  <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{each_kamar["kelas_tempat"]}}</td>
+                    <td>{{each_kamar["kapasitas"]}}</td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <th colspan="2">Data tidak tersedia</th>
+                  </tr>
+                {% endif %}
+
+
+              </tbody>
+            </table>
+            <!-- layanan -->
+            <table class="table table-striped" id="tableLayanan">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Layanan</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,6 +95,33 @@
                     <td>{{layanan}}</td>
                   </tr>
                   {% endfor %}
+                  {% else %}
+                  <tr>
+                    <th colspan="2">Data tidak tersedia</th>
+                  </tr>
+                  {% endif %}
+              </tbody>
+            </table>
+            <!-- tenaga -->
+            <table class="table table-striped" id="tableTenaga">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Tenaga</th>
+                  <th scope="col">SDM</th> 
+                  <th scope="col">Jumlah</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if tenaga %}
+                  {% for each_tenaga in tenaga %}
+                  <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{each_tenaga["grup"]}}</td>
+                    <td>{{each_tenaga["sdm"]}}</td>
+                    <td>{{each_tenaga["jumlah"]}}</td>
+                  </tr>
+                  {% endfor %}
                 {% else %}
                   <tr>
                     <th colspan="2">Data tidak tersedia</th>
@@ -65,6 +130,7 @@
 
               </tbody>
             </table>
+            
           </div>
           <div class="col-lg-5 col-12">
             <div class="row mx-3">
@@ -202,26 +268,31 @@
                 </div>
               </div>
               <div class="col-12">
-                <h3 class="mt-5">Rumah Sakit Lainnya</h3>
-                {% for data in random %}
-                <div class="card mb-3 result" onclick="location.href='/detail/{{data.nama.value}}'" style="max-width: 580px">
+                <h3 class="mt-5">Rumah Sakit Terdekat</h3>
+                {% for detail in closest_hospitals_details %}
+                <div class="card mb-3 result" onclick="location.href='/detail/{{ detail['dat']['nama']['value'] }}'" style="max-width: 580px">
                   <div class="row g-0">
                     <div class="col-md-4">
+                      {% if detail['dat'].get('image_url') %}
                       <img
-                        src="{{data['image_url']['value']}}"
+                        src="{{ detail['dat']['image_url']['value'] }}"
                         class="img-top img-fluid rounded-start"
                         style="object-fit: cover; width: 100%; height: 100%"
-                        alt="{{data['nama']['value']}}"
+                        alt="{{ detail['dat']['image_url']['value'] }}"
                       />
+                      {% endif %}
                     </div>
                     <div class="col-md-8">
                       <div class="card-body">
-                        <h5 class="card-title">{{data['nama']['value']}}</h5>
+                        <h5 class="card-title">{{ detail['dat']['nama']['value'] }}</h5>
                         <p class="card-text">
-                          Alamat: {{data['alamat']['value']}}
+                          {{ detail['distance'] }} km
                         </p>
                         <p class="card-text">
-                          <small class="text-muted">Telepon: {{data['telepon']['value']}}</small>
+                          {{ detail['dat']['alamat']['value'] }}
+                        </p>
+                        <p class="card-text">
+                          <small class="text-muted">{{ detail['dat']['telepon']['value'] }}</small>
                         </p>
                       </div>
                     </div>
@@ -243,5 +314,46 @@
         maxZoom: 19,
     }).addTo(map);
     var marker = L.marker([latitude, longitude]).addTo(map);
+
+    document.addEventListener("DOMContentLoaded", function () {
+    // Get all navigation items
+    var navItems = document.querySelectorAll("#myTabs .nav-link");
+
+    // Get all tables
+    var tableKamar = document.getElementById("tableKamar");
+    var tableLayanan = document.getElementById("tableLayanan");
+    var tableTenaga = document.getElementById("tableTenaga");
+    tableLayanan.style.display = "none";
+    tableTenaga.style.display = "none";
+    // Add click event listener to each item
+    navItems.forEach(function (item) {
+      item.addEventListener("click", function (event) {
+        // Prevent default link behavior
+        event.preventDefault();
+
+        // Hide all tables
+        tableKamar.style.display = "none";
+        tableLayanan.style.display = "none";
+        tableTenaga.style.display = "none";
+
+        // Determine which table to show based on the clicked item
+        if (item.hash === "#kamar") {
+          tableKamar.style.display = "table";
+        } else if (item.hash === "#layanan") {
+          tableLayanan.style.display = "table";
+        } else if (item.hash === "#tenaga") {
+          tableTenaga.style.display = "table";
+        }
+
+        // Remove "active" class from all items
+        navItems.forEach(function (navItem) {
+          navItem.classList.remove("active");
+        });
+
+        // Add "active" class to the clicked item
+        item.classList.add("active");
+      });
+    });
+  });
   </script>
 </html>

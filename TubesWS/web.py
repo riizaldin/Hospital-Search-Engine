@@ -36,12 +36,15 @@ sparql = SPARQLWrapper(
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
-    return render_template("index.html")
+    all_hospitals = get_all_hospitals()
+    return render_template("index.html", all_hospitals = all_hospitals)
 
 @app.route('/search', methods=['GET'])
 def search():
+    all_hospitals = get_all_hospitals()
     search_query = request.args.get('search')
     if search_query is None:
         return redirect('/')
@@ -71,7 +74,7 @@ def search():
     ret = sparql.queryAndConvert()
     result = ret["results"]["bindings"]
     count = len(result)
-    return render_template("search.html", result=result, search_query=search_query, count=count)
+    return render_template("search.html", result=result, search_query=search_query, count=count, all_hospitals = all_hospitals)
 
 @app.route('/detail/<hospital>')
 def detail(hospital):
@@ -390,5 +393,5 @@ def get_closest_hospitals(user_latitude, user_longitude):
     return closest_hospitals_details
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
   

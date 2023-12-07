@@ -15,16 +15,24 @@
     <script src="{{ url_for('static', filename= 'leaflet/leaflet.js') }}"></script>
     <link rel="icon" href="{{ url_for('static', filename= 'images/thumbnailsumutsehat.png') }}" type="image/png" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+    <style>
+      .autocomplete:hover{
+        font-weight: bold;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <div class="s004">
-        <form method="get" action="/search">
+        <form autocomplete="off" method="get" action="/search">
           <fieldset>
           <legend class="legend"><img src="{{ url_for('static', filename= 'images/logo.png ') }}" alt="logo" width="350px"></legend>
           <form class="d-flex w-50" role="search">
-            <input class="search form-control me-2 p-3 shadow-sm" name="search" type="search" placeholder="Masukkan Rumah Sakit, Alamat atau Pelayanan" aria-label="Search">
+            <input class="search form-control me-2 p-3 shadow-sm" name="search" id="search" type="search" placeholder="Masukkan Rumah Sakit, Alamat atau Pelayanan" aria-label="Search">
             <input type="submit" hidden />
+            <div style="position:absolute; background-color: white; width:56%; border-radius: 20px;" id="search-suggestions">
+            <div class="suggestion" ></div>
+            </div>      
         </form>
         </fieldset>
       </form>
@@ -126,7 +134,6 @@
             data:  JSON.stringify(s),
             success: function (hospitals) {
               updateLocationContent(hospitals);
-              console.log(hospitals);
             },
             error: function () {
               var errorMessage = 'Error getting location.';
@@ -139,6 +146,48 @@
           alert(errorMessage);
       }
       getCurrentLocation();
+
+    </script>
+    <script>
+      // Assuming all_hospitals is an array of hospital names fetched from the server
+      let all_hospitals = {{ all_hospitals | safe }};
+      const searchInput = document.getElementById('search');
+      const suggestionsContainer = document.getElementById('search-suggestions');
+
+      searchInput.addEventListener('input', function(event) {
+          const userInput = event.target.value.toLowerCase();
+          if (userInput === '') {
+            suggestionsContainer.innerHTML = '';
+            return;
+          }
+          const suggestions = all_hospitals.filter(hospital => hospital['nama']['value'].toLowerCase().includes(userInput)).slice(0, 5);
+          displaySuggestions(suggestions);
+      });
+
+      function displaySuggestions(suggestions) {
+          const suggestionsHTML = suggestions.map(suggestion =>
+              `<div class="suggestion">
+                  <span class="ps-3 autocomplete">
+                      ${suggestion['nama']['value']}
+                  </span>
+              </div>`).join('');
+
+          suggestionsContainer.innerHTML = suggestionsHTML;
+          console.log(suggestionsHTML);
+      }
+
+
+      suggestionsContainer.addEventListener('click', function(event) {
+          const clickedSuggestion = event.target.closest('.suggestion');
+          if (clickedSuggestion) {
+              const textElement = clickedSuggestion.querySelector('.autocomplete');
+              if (textElement) {
+                  searchInput.value = textElement.textContent.trim(); // Trim removes leading/trailing white spaces
+                  suggestionsContainer.innerHTML = ''; // Clear suggestions after selection
+                  searchInput.focus();
+              }
+          }
+      });
 
     </script>
   </body>

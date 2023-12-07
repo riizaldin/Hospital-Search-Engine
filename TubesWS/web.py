@@ -78,6 +78,7 @@ def search():
 
 @app.route('/detail/<hospital>')
 def detail(hospital):
+    all_hospitals = get_all_hospitals()
     sparqlQuery = f"""
     PREFIX schema: <http://websemantikkelompok6.org/>
     SELECT  ?subject ?alamat ?kelas ?luas_bangunan ?luas_tanah ?blu ?jenis ?telepon ?image_url ?direktur ?koordinat ?kota (GROUP_CONCAT(?pelayanan; separator=',') AS ?listPelayanan)
@@ -228,11 +229,12 @@ def detail(hospital):
         if len(closest_hospitals_details) == 3:  # Stop fetching once three hospitals are found
             break
 
-    return render_template("detail.html", kamar=kamar, tenaga=tenaga, result=result, name=hospital, coordinates=coordinates_dict, distances=distances_dict, closest_hospitals_details=closest_hospitals_details, latitude = latitude_rs, longitude = longitude_rs)
+    return render_template("detail.html", all_hospitals=all_hospitals, kamar=kamar, tenaga=tenaga, result=result, name=hospital, coordinates=coordinates_dict, distances=distances_dict, closest_hospitals_details=closest_hospitals_details, latitude = latitude_rs, longitude = longitude_rs)
 
 
 @app.route('/kota/<kota>')
 def about(kota):
+    all_hospitals = get_all_hospitals()
     kodeKota = {
         "Deli Serdang": "Q5804" ,
         "Tapanuli Utara": "Q5863" ,
@@ -315,7 +317,7 @@ def about(kota):
         tanggal = tanggal.strftime("%Y-%m-%d")
     else:
         tanggal = None
-    return render_template("kota.html", wikiResult=wikiResult, latitude=latitude, longitude=longitude, tanggal=tanggal)
+    return render_template("kota.html", all_hospitals=all_hospitals, wikiResult=wikiResult, latitude=latitude, longitude=longitude, tanggal=tanggal)
 
 latitude_now = 0
 longitude_now = 0

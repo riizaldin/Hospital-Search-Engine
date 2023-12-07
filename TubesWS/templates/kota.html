@@ -23,24 +23,42 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+      .autocomplete:hover{
+        font-weight: bold;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <header>
-       <nav class="navbar bg-light p-3 shadow-sm fixed-top">
-      <div class="container-fluid d-flex justify-content-between">
-        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename= 'images/logo.png') }}" alt="logo" width="120px"></a>
-        <form class="d-flex w-50" role="search" method="get" action="/search">
-          <input
-            class="search form-control me-2 shadow-sm"
-            type="search"
-            name="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <input type="submit" hidden>
-        </form>
-      </div>
-    </nav>
+      <nav class="navbar bg-light p-3 shadow-sm fixed-top">
+        <div class="container-fluid d-flex justify-content-between">
+          <a class="navbar-brand" href="/"
+            ><img
+              src="{{ url_for('static', filename= 'images/logo.png') }}"
+              alt="logo"
+              width="120px"
+          /></a>
+          <form autocomplete="off" class="d-flex w-50" role="search" method="get" action="/search">
+            <input
+              class="search form-control me-2 shadow-sm"
+              id="search"
+              type="search"
+              name="search"
+              {% if search_query %}
+                value="{{ search_query }}"
+              {% else %}
+                placeholder="Search"
+              {% endif %}
+              aria-label="Search"
+            />
+            <input type="submit" hidden />
+            <div style="position:absolute;background-color: white; left: 50%; top:83%; width:56%; border-radius: 20px;" id="search-suggestions">
+            <div class="suggestion" ></div>
+          </form>        
+        </div>
+      </nav>
     </header>
     <div class="container py-5">
       <div class="container-fluid mt-5">
@@ -247,4 +265,46 @@
         maxZoom: 19,
     }).addTo(map);
     var marker = L.marker([latitude, longitude]).addTo(map);
+</script>
+<script>
+  // Assuming all_hospitals is an array of hospital names fetched from the server
+  let all_hospitals = {{ all_hospitals | safe }};
+  const searchInput = document.getElementById('search');
+  const suggestionsContainer = document.getElementById('search-suggestions');
+
+  searchInput.addEventListener('input', function(event) {
+      const userInput = event.target.value.toLowerCase();
+      if (userInput === '') {
+        suggestionsContainer.innerHTML = '';
+        return;
+      }
+      const suggestions = all_hospitals.filter(hospital => hospital['nama']['value'].toLowerCase().includes(userInput)).slice(0, 5);
+      displaySuggestions(suggestions);
+  });
+
+  function displaySuggestions(suggestions) {
+      const suggestionsHTML = suggestions.map(suggestion =>
+          `<div class="suggestion">
+              <span class="ps-3 autocomplete">
+                  ${suggestion['nama']['value']}
+              </span>
+          </div>`).join('');
+
+      suggestionsContainer.innerHTML = suggestionsHTML;
+      console.log(suggestionsHTML);
+  }
+
+
+  suggestionsContainer.addEventListener('click', function(event) {
+      const clickedSuggestion = event.target.closest('.suggestion');
+      if (clickedSuggestion) {
+          const textElement = clickedSuggestion.querySelector('.autocomplete');
+          if (textElement) {
+              searchInput.value = textElement.textContent.trim(); // Trim removes leading/trailing white spaces
+              suggestionsContainer.innerHTML = ''; // Clear suggestions after selection
+              searchInput.focus();
+          }
+      }
+  });
+
 </script>

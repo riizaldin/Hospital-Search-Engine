@@ -1,3 +1,4 @@
+import re
 from flask import Flask, render_template, redirect, request
 from math import radians, sin, cos, sqrt, atan2
 from datetime import datetime
@@ -20,6 +21,14 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
     distance = 6371 * c  # Radius of Earth in kilometers
     return distance
+def remove_prefix(query):
+    # Define patterns to match "rs " or "rumah sakit " at the beginning of the string
+    pattern = r'^(rs |rumah\s*sakit\s*)'
+
+    # Use re.sub to remove the matched pattern if it exists at the beginning of the string
+    result = re.sub(pattern, '', query)
+
+    return result
 
 sparql = SPARQLWrapper(
     "http://localhost:3030/sumutsehat/query"
@@ -36,6 +45,7 @@ def search():
     search_query = request.args.get('search')
     if search_query is None:
         return redirect('/')
+    changed_query = remove_prefix(search_query)
     sparqlQuery = f"""
     PREFIX schema: <http://websemantikkelompok6.org/>
     SELECT ?subject ?nama ?alamat ?kelas ?luas_bangunan ?kota ?luas_tanah ?blu ?jenis ?telepon ?image_url (GROUP_CONCAT(?pelayanan; separator=',') AS ?listPelayanan)
@@ -51,7 +61,7 @@ def search():
         OPTIONAL {{ ?subject schema:telepon ?telepon . }}
         OPTIONAL {{ ?subject schema:kota ?kota . }}
         OPTIONAL {{ ?subject schema:image_url ?image_url . }}
-        FILTER (CONTAINS(LCASE(?nama), LCASE("{search_query}")) || CONTAINS(LCASE(?alamat), LCASE("{search_query}")) || CONTAINS(LCASE(?pelayanan), LCASE("{search_query}")))
+        FILTER (CONTAINS(LCASE(?nama), LCASE("{changed_query}")) || CONTAINS(LCASE(?alamat), LCASE("{search_query}")) || CONTAINS(LCASE(?pelayanan), LCASE("{search_query}")))
     }}
     GROUP BY ?subject ?nama ?alamat ?kelas ?luas_bangunan ?luas_tanah ?blu ?jenis ?telepon ?image_url ?kota
     HAVING (BOUND(?nama))

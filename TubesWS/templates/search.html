@@ -40,13 +40,18 @@
         <form class="d-flex w-50" role="search" method="get" action="/search">
           <input
             class="search form-control me-2 shadow-sm"
+            id="search"
             type="search"
             name="search"
-            placeholder="Search"
+            {% if search_query %}
+              value="{{ search_query }}"
+            {% else %}
+              placeholder="Search"
+            {% endif %}
             aria-label="Search"
           />
           <input type="submit" hidden />
-        </form>
+        </form>        
       </div>
     </nav>
 
